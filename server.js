@@ -17,6 +17,7 @@ app.set('view engine', 'html');
 
 //BodyParser
 app.use(require('body-parser').urlencoded({ extended: false }));
+app.use(require('body-parser').json());
 
 //Method Override
 app.use(require('method-override')('_method'))
@@ -24,15 +25,16 @@ app.use(require('method-override')('_method'))
 //Routes
 
 app.get('/', (req, res, next)=>{
-  User.findAll({
-    include: [Office]
-  })
-  .then((users)=>{
-    Office.findAll()
-      .then((offices)=>{
-        res.render('index.html', {users, offices});
-      })
-  })
+  res.render('index.html')
+  // User.findAll({
+  //   include: [Office]
+  // })
+  // .then((users)=>{
+  //   Office.findAll()
+  //     .then((offices)=>{
+  //       res.render('index.html', {users, offices});
+  //     })
+  // })
 })
 app.use('/users', require('./routes/users.js'))
 app.use('/offices', require('./routes/offices.js'))

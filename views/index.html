@@ -1,6 +1,8 @@
 <html>
   <head>
+    <title>Acme Offices</title>
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
   </head>
   <body>
     <div class = 'container'>
@@ -9,13 +11,15 @@
         <div class = 'col-sm-6'>
           <h2>Users</h2>
           <div class = 'well'>
-            <div class = 'form-group'>
-              <label>Name</label>
-              <input class = 'form-control'></input><br>
-            <div class = 'form-group'>
-              <button class = 'btn btn-primary'>Save</button>
-            </div>
-            </div>
+            <form method='POST' action='/users'>
+              <div class = 'form-group'>
+                <label>Name</label>
+                <input name = 'newUserName' class = 'form-control'></input><br>
+              </div>
+              <div class = 'form-group'>
+                <button name = 'newUserNameButton' class = 'btn btn-primary'>Save</button>
+              </div>
+            </form>
           </div>
         </div>
         <div class = 'col-sm-6'>
@@ -23,7 +27,7 @@
           <div class = 'well'>
             <div class = 'form-group'>
               <label>Name</label>
-              <input class = 'form-control' id = 'locationTextField' type = 'text' ></input>
+                <input class = 'form-control' id = 'locationTextField' type = 'text' name='newLocation' ></input>
             </div>
           </div>
         </div>
@@ -32,26 +36,14 @@
         <div class = 'col-sm-6'>
           <div class="panel panel-default">
             <div class="panel-heading">User List</div>
-            <div class="panel-body">
-              {% for user in users %}
-                <div class = 'well'>
-                  <h3>{{ user.name }}</h3>
-                </div>
-              {% endfor %}
+            <div class="panel-body" id='userList'>
             </div>
           </div>
         </div>
         <div class = 'col-sm-6'>
           <div class="panel panel-default">
             <div class="panel-heading">Office List</div>
-            <div class="panel-body">
-              {% for office in offices %}
-                <div class = 'well'>
-                  <h3>{{ office.name }}</h3>
-                  lat: {{ office.lat }} <br>
-                  long: {{ office.long }}
-                </div>
-              {% endfor %}
+            <div class="panel-body" id='officeList'>
             </div>
           </div>
         </div>
@@ -65,5 +57,48 @@
       }
       google.maps.event.addDomListener(window, 'load', init);
     </script>
+    <script>
+      function lister(config, id){
+        let template = `
+            ${config.reduce(function(sum, el){
+              sum+= `
+              <div class = 'well'>
+                <h3>${el.name}</h3>
+              </div>
+              `;
+              return sum;
+            },'')}
+        `
+        $( document ).ready(function() {
+          console.log($html,$(id));
+            var $html = $(template);
+            $(id).append($html)
+        });
+      }
+      $.ajax({
+        url:'/users',
+        method: 'GET'
+      })
+        .then(function([users, offices]){
+          lister(users, '#userList')
+          lister(offices, '#officeList')
+        })
+    </script>
+    <script>
+    // $(document).ready(function(){
+    //   $('#locationTextField').on('click', function({
+    //
+    //   }));
+    // })
+      $.ajax({
+        url:'/offices',
+        method: 'POST'
+      })
+      .then(function(result){
+        console.log('result',result);
+      })
+
+    </script>
+
   </body>
 </html>

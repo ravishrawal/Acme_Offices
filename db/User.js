@@ -3,7 +3,8 @@ const Sequelize = conn.Sequelize;
 
 const User = conn.define('user', {
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false
   }
 });
 
