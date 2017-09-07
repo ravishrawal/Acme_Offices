@@ -25,10 +25,12 @@
         <div class = 'col-sm-6'>
           <h2>Offices</h2>
           <div class = 'well'>
-            <div class = 'form-group'>
-              <label>Name</label>
+            <form method='POST' action='/offices'>
+              <div class = 'form-group'>
+                <label>Name</label>
                 <input class = 'form-control' id = 'locationTextField' type = 'text' name='newLocation' ></input>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -63,7 +65,7 @@
             ${config.reduce(function(sum, el){
               sum+= `
               <div class = 'well'>
-                <h3>${el.name}</h3>
+                <h3>${Object.keys(el)}</h3>
               </div>
               `;
               return sum;
@@ -81,24 +83,39 @@
       })
         .then(function([users, offices]){
           lister(users, '#userList')
-          lister(offices, '#officeList')
+        })
+
+      $.ajax({
+        url
+      })
+
+      $.ajax({
+        url:'/users',
+        method: 'POST'
+      })
+        .then(function(){
+          console.log('Adding User')
         })
     </script>
     <script>
-    // $(document).ready(function(){
-    //   $('#locationTextField').on('click', function({
-    //
-    //   }));
-    // })
+    $.ajax({
+      url:'/offices',
+      method:'GET'
+    })
+      .then(function(offices){
+        console.log('OFFICES',offices)
+        lister(offices, '#officeList')
+      })
+
+    $('#locationTextField').on('enter', function(){
       $.ajax({
         url:'/offices',
         method: 'POST'
       })
-      .then(function(result){
-        console.log('result',result);
+      .then(function(){
+        console.log('Adding Office');
       })
-
+    })
     </script>
-
   </body>
 </html>
